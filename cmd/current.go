@@ -14,7 +14,7 @@ var currentCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		apiKey := config.ReadEnvValue("API_KEY")
 		location := weather.Location{}
-		location.GetLatLonFromZip(args[0], apiKey)
+		weather.GetLocationFromZip(args[0], apiKey)
 		fmt.Printf("Location: %s", location)
 	},
 }
