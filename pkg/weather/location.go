@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-const GeoLocationUrl = "http://api.openweathermap.org/geo/1.0/zip?zip="
+const geoLocationUrl = "http://api.openweathermap.org/geo/1.0/zip?zip="
 
 // Location stores the lat long and name of the given location
 type Location struct {
@@ -18,23 +18,27 @@ type Location struct {
 
 // GetLocationFromZip Uses GeoCode to reverse zip into lat lon coords
 func GetLocationFromZip(zip string, apiKey string) (*Location, error) {
-	url := fmt.Sprintf("%s%s&limit=%d&appid=%s", GeoLocationUrl, zip, 1, apiKey)
+	// Construct the URL
+	url := fmt.Sprintf("%s%s&limit=%d&appid=%s", geoLocationUrl, zip, 1, apiKey)
+	// Send GET req to the API
 	resp, err := client.Get(url)
 	if err != nil {
-		return &Location{}, fmt.Errorf("failed to make location get request: %s", err)
+		return nil, fmt.Errorf("failed to make location get request: %s", err)
 	}
-
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusOK {
-		decoder := json.NewDecoder(resp.Body)
-		l := Location{}
-		err = decoder.Decode(&l)
-		if err != nil {
-			return &Location{}, fmt.Errorf("Failed to decode location %s", err)
-		}
-		return &l, nil
+	// Check for successful response
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("location fetch failed with status: %d", resp.StatusCode)
 	}
 
-	return &Location{}, fmt.Errorf("location fetch failed with status: %d", resp.StatusCode)
+	// Parse the API response
+	decoder := json.NewDecoder(resp.Body)
+	var location Location
+	err = decoder.Decode(&location)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to decode location %s", err)
+	}
+	return &location, nil
+
 }
