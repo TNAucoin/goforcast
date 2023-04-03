@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/tnaucoin/goforcast/pkg/client"
 	"net/http"
 )
 
@@ -17,7 +18,7 @@ type Location struct {
 }
 
 // GetLatLonFromZip Uses GeoCode to reverse zip into lat lon coords
-func (l *Location) GetLatLonFromZip(zip string, client *http.Client, apiKey string) (*Location, error) {
+func (l *Location) GetLatLonFromZip(zip string, apiKey string) (*Location, error) {
 	url := fmt.Sprintf("%s%s&limit=%d&appid=%s", GeoLocationUrl, zip, 1, apiKey)
 	resp, err := client.Get(url)
 	if err != nil {

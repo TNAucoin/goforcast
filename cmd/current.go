@@ -5,11 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tnaucoin/goforcast/pkg/config"
 	"github.com/tnaucoin/goforcast/pkg/weather"
-	"net/http"
-	"time"
 )
-
-var httpClient = &http.Client{Timeout: 10 * time.Second}
 
 var currentCmd = &cobra.Command{
 	Use:   "current [zip code]",
@@ -18,7 +14,7 @@ var currentCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		apiKey := config.ReadEnvValue("API_KEY")
 		location := weather.Location{}
-		location.GetLatLonFromZip(args[0], httpClient, apiKey)
+		location.GetLatLonFromZip(args[0], apiKey)
 		fmt.Printf("Location: %s", location)
 	},
 }
