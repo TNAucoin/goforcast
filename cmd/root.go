@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -12,7 +11,7 @@ var rootCmd = &cobra.Command{
 	Short: "Get a forcast for your location.",
 	Long:  "A simple cli for getting the current weather forcast for your location.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Args: %s", args)
+
 	},
 }
 
