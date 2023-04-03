@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-const geoLocationUrl = "http://api.openweathermap.org/geo/1.0/zip?zip="
+const geoLocationUrl = "http://api.openweathermap.org/geo/1.0/zip"
 
 // Location stores the lat long and name of the given location
 type Location struct {
@@ -19,7 +19,7 @@ type Location struct {
 // GetLocationFromZip Uses GeoCode to reverse zip into lat lon coords
 func GetLocationFromZip(zip string, apiKey string) (*Location, error) {
 	// Construct the URL
-	url := fmt.Sprintf("%s%s&limit=%d&appid=%s", geoLocationUrl, zip, 1, apiKey)
+	url := fmt.Sprintf("%s?zip=%s&limit=%d&appid=%s", geoLocationUrl, zip, 1, apiKey)
 	// Send GET req to the API
 	resp, err := client.Get(url)
 	if err != nil {
@@ -39,6 +39,7 @@ func GetLocationFromZip(zip string, apiKey string) (*Location, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Failed to decode location %s", err)
 	}
+	fmt.Println(location)
 	return &location, nil
 
 }
