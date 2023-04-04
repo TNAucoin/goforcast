@@ -16,11 +16,15 @@ var currentCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		apiKey := config.ReadEnvValue("API_KEY")
 		location, err := weather.GetLocationFromZip(args[0], apiKey)
-		weather.GetCurrentWeather(location.Lat, location.Lon, apiKey)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Location: %v", *location)
+		forecast, err := weather.GetCurrentWeather(location.Lat, location.Lon, apiKey)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%v", *forecast)
+
 	},
 }
 
