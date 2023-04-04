@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/tnaucoin/goforcast/pkg/config"
 	"github.com/tnaucoin/goforcast/pkg/weather"
-	"log"
 )
 
 var currentCmd = &cobra.Command{
@@ -15,6 +16,7 @@ var currentCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		apiKey := config.ReadEnvValue("API_KEY")
 		location, err := weather.GetLocationFromZip(args[0], apiKey)
+		weather.GetCurrentWeather(location.Lat, location.Lon, apiKey)
 		if err != nil {
 			log.Fatal(err)
 		}
