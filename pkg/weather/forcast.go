@@ -1,6 +1,11 @@
 package weather
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/tnaucoin/goforcast/pkg/client"
+	"io"
+	"log"
+)
 
 const currentWeatherURL = "https://api.openweathermap.org/data/2.5/weather"
 
@@ -25,7 +30,16 @@ type Temperature struct {
 
 func GetCurrentWeather(lat, lon float32, apiKey string) (*Forecast, error) {
 	url := buildURLRequest(lat, lon, apiKey)
-	fmt.Println(url)
+	res, err := client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal("failed to read body res")
+	}
+	fmt.Printf("%s", body)
 	return nil, fmt.Errorf("not implemented")
 }
 
